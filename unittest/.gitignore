@@ -1,0 +1,7 @@
+*.[do]
+*Test.h
+AceUnitMain
+Suite*.*
+makehelp.pl
+runAceUnit
+test

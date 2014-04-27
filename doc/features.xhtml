@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>KeilWrapper Features</title>
+<style type="text/css"><![CDATA[
+.notImplemented {
+    background-color: #faa;
+}
+]]></style>
+</head>
+<body>
+
+<h1>KeilWrapper Features</h1>
+
+<table border="1">
+    <tr>
+        <th>Feature</th>
+        <th>State</th>
+    </tr>
+    <tr>
+        <td>Detecting the tool from the name</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Detecting the toolchain from the name</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Selecting the toolchain with <code>-march</code></td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>
+            Preprocessing with GCC instead of Keil.<br />
+            The pre-defined macros would still be the ones specified in i.e. <a href="http://www.keil.com/support/man/docs/c251/c251_pp_predefmacroconst.htm">C251 Predefined Macros</a>.<br />
+            Challenge:<br />The memory model must be known to the preprocessor because the preprocessor provides <code>__MODEL__</code> which can be 0 (SMALL), 2 (LARGE), 3 (TINY), 4 (XTINY) or 5 (XSMALL).<br />
+            The memory model can be changed in the file using a <code>#pragma</code>, i.e. <code>#pragma SMALL</code>.
+        </td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Converting <code>-I X </code> to <code>INCDIR(X)</code></td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Converting <code>-D X </code> to <code>DEFINE(X)</code></td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Reordering of command line arguments to the expected order</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Converting multiple <code>-I</code> to a single <code>INCDIR()</code></td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Converting output filename from <code>XYZ.OBJ</code> to <code>xyz.o</code></td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Support option <code>-o</code> to specify output filename <code>OBJECT()</code></td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Support option <code>-c</code> to compile</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Support option <code>-E</code> to run the preprocessor only <code>PREPRINTONLY</code>, understanding that <code>-E -o FILENAME</code> becomes <code>PREPRINTONLY(FILENAME)</code> instead of <code>PREPRINTONLY OBJECT(FILENAME)</code></td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Support option <code>-h</code> to print a help text.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Support option <code>-V</code> to print version information.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Support option <code>-v</code> to be verbose.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Change message format to what tools understand.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Change the return value 1 into 0 and 2 into 1.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>
+            Support -Werror for turning warnings into errors.
+            This would disable turning return value 1 into 0 and change the message text of warnings from warning into error.
+        </td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Supply defaults for output parameters.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>KeilWrapper Documentation</title>
+</head>
+<body>
+
+<h1>KeilWrapper Documentation</h1>
+
+<h2>KeilWrapper? What? Why?</h2>
+
+<p>
+    KeilWrapper is a set of binary programs which wrap the original Keil-tools with a more integration-friendly command line interface.
+    The Keil-tools which are wrapped are the Compiler, Assembler, Archiver / Librarian, Linker and Object Copier of the Keil C166, C51 and C251 Development Tools.
+    The origial command line interface of these tools is not compatible with the command line interface expected by make-programs like GNU make.
+</p>
+
+<p>
+    KeilWrapper overcomes several problems that build managers, developers and integrators are facing with the Keil Development Tools.
+    The problems which KeilWrapper overcomes are:
+</p>
+<ul>
+    <li>
+        The command-line syntax is not "C-style".
+        It is not compatible with the expectations of make tools.
+        And it creates additional burden in multi-platform projects.
+    </li>
+    <li>
+        The Keil Development Tools filenames are not "C-style".
+        The object file suffix is <code>.OBJ</code> when it should be <code>.o</code>.
+        And the derived filenames are all converted to uppercase.
+        This breaks make tools which usually are case-sensitive.
+    </li>
+    <li>
+        The librarian is not "C-style".
+        A "C-style" librarian allows any kind of file being stored in a library archive.
+        The Keil Development Tools only allow object files to be stored in a library archive.
+    </li>
+    <li>
+        The Keil Compiler cannot generate dependency files, neither on-the-file (i.e. GCC option <code>-MMD</code>), nor explicitly.
+        Creating an incremental build system is out-of-the-box not possible with the Keil Compiler.
+    </li>
+    <li>
+        The Keil Preprocessor has a bug.
+        Include statements in the form <code>#include MACRO</code> do not work.
+    </li>
+    <li>
+        The Keil tools are very verbose, which is not a direct problem but a significant nuisance.
+        When building something successfully with <code>make -s</code> successfully, there should be no output.
+        The Keil tools print lots of garbage.
+    </li>
+    <li>
+        The Keil tools print their error message with the wrong filenames and in a proprietary format.
+        Editors and IDEs like vim, emacs, Eclipse, Source Insight do not know how to parse the proprietary format of the Keil tools.
+        Messages should actually be printed in a format like this:
+        <code>message ::= filename ':' line (':' column)?  ': ' severity ': ' messageText</code>
+    </li>
+    <li>
+        Compiler warnings should not fail the build.
+        The contract of make is that any return value != 0 means failure.
+        The Keil tools return 1 in case of warnings, which unintentionally turns warnings into errors from a make perspective.
+    </li>
+    <li>
+        The Keil tools place their output files next to the input files if no path was specified.
+        The C-style behavior is to place the output files in the current working directory if no path was specified.
+        The C-style behavior is required in order to separate output files for different compiler runs when doing multi-platform or multi-configuration projects.
+    </li>
+</ul>
+
+<p>
+    There also are further problems for build managers, developers and integrators which KeilWrapper does not yet address.
+    The problems not yet addressed by KeilWrapper are:
+</p>
+<ul>
+    <li>
+        The output file formats are not "C-style" (<strong>not solved by KeilWrapper</strong>).
+        The object file format is a proprietary format when it should be something like <em>a.out</em>, <em>COFF</em> or <em>ELF</em>.
+        This breaks compatibility with tools like GNU binutils.
+    </li>
+    <li>
+        The Keil Development Tools use language extensions which they do not put in the '__'-namespace.
+        See <a href="http://www.keil.com/support/man/docs/c251/c251_extensions.htm">C251 Language Extensions</a>.
+        Words like <code>code</code>, <code>data</code>, <code>bit</code>, <code>reentrant</code>, <code>small</code>, <code>large</code>, <code>interrupt</code> are reserved words.
+        If you have used them as symbol names in your source code, you will have to change them, even if you use KeilWrapper instead of the original Keil C251 tools.
+    </li>
+</ul>
+
+<p>
+    Note: See <a href="features.xhtml">KeilWrapper Features</a> for a complete list of which features are currently supported by KeilWrapper.
+</p>
+
+
+<h3>"C-style" command line interface</h3>
+
+<p>
+    Make programs like GNU make expect tools to be called with a certain syntax.
+    This expectation is reflected in the implicit rules of make programs.
+    The implicit rules specify the command line template how to invoke certain tools.
+    For example, the implicit rule for creating object files from C files looks like this<a href="http://git.savannah.gnu.org/cgit/make.git/plain/default.c" rel="Cite" title="default.c"></a>:
+</p>
+<pre type="text/x-Makefile-source"><![CDATA[.c.o:
+	$(COMPILE.c) $(OUTPUT_OPTION) $<]]></pre>
+<p>
+    Replacing the first level of make variables and short-cuts with their values, the rule looks like this:
+</p>
+<pre type="text/x-Makefile-source"><![CDATA[%.o: %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c -o $@ $<]]></pre>
+<p>
+    The programs of the Keil C166, C51 and C251 Development Tools are not compatible with he default implicit rules of GNU make.
+    For example, the Compilers C166, C51 and C251 do not understand the command line options <code>-c</code> and <code>-o</code>.
+    It is possible to redefine the default variables like <code>COMPILE.c</code> to have corresponding replacements.
+</p>
+<p>
+    However, for this is not sufficient for cross-platform projects.
+    Projects quickly get additional command line options for their compilers, for example for specifying the preprocessor include path or to predefine macros.
+    The typical command line syntax understood by most compilers is <code>-I path</code> to add directories to the include search path of the preprocessor.
+    For this, the syntax of Keil C251 is <code>INCLUDE(path)</code>.
+    If multiple paths are to be given, most compilers expect something like <code>-I path1 -I path2 -I path3</code>.
+    The Keil tools expect something like <code>INCLUDE(path1,path2,path3)</code>.
+</p>
+<p>
+    Thus, for cross-platform-projects, simply changing <code>COPMILE.c</code> a bit is not sufficient to integrate the Keil Development Tools nicely into the same Makefiles.
+</p>
+
+
+<h3>"C-style" filenames</h3>
+
+<p>
+    The Keil Development Tools do not respect case and they use the wrong suffix.
+    All file names are converted to uppercase only.
+    This breaks make-tools because they are usually case-sensitive.
+</p>
+<p>
+    For example, if compiling <code>hello.c</code>, the expected behavior is that the output file is named <code>hello.o</code>.
+    But the Keil Development Tools instead create an output file named <code>HELLO.OBJ</code>.
+    This means the implicit rules of make will not be working at all, for two reasons.
+    The case of the filename is wrong, and the filename has the wrong suffix.
+</p>
+
+
+<h3>"C-style" archiver / librarian</h3>
+
+<p>
+    The archiver / librarian is the tool which is used to create static link libraries.
+    The "standard" archiver / librarian 
+</p>
+
+
+<h2>Using KeilWrapper</h2>
+
+<p>
+    KeilWrapper is very flexible, and there are several ways how to use KeilWrapper.
+</p>
+<ol>
+    <li>As direct replacement with automatic toolchain selection based on <code>-march</code> argument (recommended) or the command name.</li>
+    <li>As explicit wrapper.</li>
+    <li>As a plugin to GCC (planned).</li>
+    <li>As a tool that translates C-style arguments to Keil arguments.</li>
+</ol>
+
+
+<h3>Using the direct replacement with automatic toolchain selection based on <code>-march</code> argument (recommended).</h3>
+
+<p>
+    There are two things to select, toolchain and tool.
+</p>
+
+<h4>Toolchain / Platform selection</h4>
+<p>
+    If the name of the KeilWrapper contains a corresponding platform name, i.e. <code>166</code>, <code>51</code> or <code>251</code>, that selection is set.
+    If a <code>-march</code> argument is found, that selects the platform, overriding any previous selection made by previous <code>-march</code> arguments or the name.
+</p>
+
+<h4>Tool selection</h4>
+<p>
+    KeilWrapper searches for a substring in its name which corresponds to the C-style toolname to select the type of tool.
+    If no such substring is found, KeilWrapper searches for a substring in its name which corresponds to the Keil toolname to select the type of tool, in either all lowercase or all uppercase.
+</p>
+
+<p>
+    The C-style toolnames are:
+</p>
+<table border="1">
+    <tr><th>Tool</th><th>C-style name</th><th>Makefile Variable</th></tr>
+    <tr><td>Compiler</td><td><code>cc</code></td><td><code>CC</code></td></tr>
+    <tr><td>Assembler</td><td><code>as</code></td><td><code>AS</code></td></tr>
+    <tr><td>Archiver / Librarian</td><td><code>ar</code></td><td><code>AR</code></td></tr>
+    <tr><td>Linker</td><td><code>ld</code></td><td><code>LD</code></td></tr>
+    <tr><td>Object Copy</td><td><code>objcopy</code></td><td>n/a</td></tr>
+</table>
+
+<p>
+    The Keil toolnames are:
+</p>
+<table border="1">
+    <tr><th>Tool</th><th>Keil name</th></tr>
+    <tr><td>Compiler</td><td><code>C</code></td></tr>
+    <tr><td>Assembler</td><td><code>A</code></td></tr>
+    <tr><td>Archiver / Librarian</td><td><code>LIB</code></td></tr>
+    <tr><td>Linker</td><td><code>L</code></td></tr>
+    <tr><td>Object Copy</td><td><code>OH</code></td></tr>
+</table>
+
+<p>
+    This means, if KeilWrapper finds <code>cc</code> in its name, it will run as Compiler.
+    If KeilWrapper finds <code>OH</code> in its name, it will run as Object Copy.
+</p>
+
+<p>
+    The default installation of KeilWrapper creates 5 binaries named <code>kwcc</code>, <code>kwas</code>, <code>kwar</code>, <code>kwld</code> and <code>kwobjcopy</code>.
+    These binaries work as follows:
+</p>
+<table border="1">
+    <tr>
+        <th rowspan="2">Purpose</th>
+        <th rowspan="2">Program Name</th>
+        <th colspan="2">Replaces</th>
+        <th rowspan="2">Makefile</th>
+    </tr>
+    <tr>
+        <th>C-Style</th>
+        <th>Keil</th>
+    </tr>
+    <tr>
+        <td>Compiler</td>
+        <td><code>kwcc</code></td>
+        <td><code>cc</code></td>
+        <td><code>C166</code> / <code>C51</code> / <code>C251</code></td>
+        <td><code>CC=kwcc</code></td>
+    </tr>
+    <tr>
+        <td>Assembler</td>
+        <td><code>kwas</code></td>
+        <td><code>as</code></td>
+        <td><code>A166</code> / <code>C51</code> / <code>A251</code></td>
+        <td><code>AS=kwas</code></td>
+    </tr>
+    <tr>
+        <td>Archiver / Librarian</td>
+        <td><code>kwar</code></td>
+        <td><code>ar</code></td>
+        <td><code>LIB166</code> / <code>LIB51</code> / <code>LIB251</code></td>
+        <td><code>AR=kwar</code></td>
+    </tr>
+    <tr>
+        <td>Linker</td>
+        <td><code>kwld</code></td>
+        <td><code>ld</code></td>
+        <td><code>L166</code> / <code>L51</code> / <code>L251</code></td>
+        <td><code>LD=kwld</code></td>
+    </tr>
+    <tr>
+        <td>Object Copy</td>
+        <td><code>kwobjcopy</code></td>
+        <td><code>objcopy</code></td>
+        <td><code>OH166</code> / <code>OH51</code> / <code>OH251</code></td>
+        <td>n/a</td>
+    </tr>
+</table>
+
+<p>
+    The following table shows how to select the toolchain.
+</p>
+<table border="1">
+    <tr>
+        <th rowspan="2"><code>Keil Development Tools</code></th>
+        <th rowspan="2"><code>-march</code>-Value</th>
+        <th colspan="5">Selected</th>
+        <th rowspan="2">Makefile</th>
+    </tr>
+    <tr>
+        <th>Compiler</th>
+        <th>Assembler</th>
+        <th>Archiver / Librarian</th>
+        <th>Linker</th>
+        <th>Object Copy</th>
+    </tr>
+    <tr>
+        <td>C166</td>
+        <td><code>-march=C166</code></td>
+        <td>C166</td>
+        <td>A166</td>
+        <td>LIB166</td>
+        <td>L166</td>
+        <td>OH166</td>
+        <td><code>TARGET_ARCH:=-march=C166</code></td>
+    </tr>
+    <tr>
+        <td>C51</td>
+        <td><code>-march=C51</code></td>
+        <td>C51</td>
+        <td>A51</td>
+        <td>LIB51</td>
+        <td>L51</td>
+        <td>OH51</td>
+        <td><code>TARGET_ARCH:=-march=C51</code></td>
+    </tr>
+    <tr>
+        <td>C251</td>
+        <td><code>-march=C251</code></td>
+        <td>C251</td>
+        <td>A251</td>
+        <td>LIB251</td>
+        <td>L251</td>
+        <td>OH251</td>
+        <td><code>TARGET_ARCH:=-march=C251</code></td>
+    </tr>
+</table>
+
+<p>
+    This means, the following five simple lines of Makefile will make your build run with the Keil C251 Development Tools instead of i.e. GCC:
+</p>
+<pre type="text/x-Makefile-source">CC:=kwcc
+AS:=kwas
+AR:=kwar
+LD:=kwld
+TARGET_ARCH:=-march=C251</pre>
+
+<p>
+    An alternative way is to rename to binaries to <code>kwcc251</code>, <code>kwas251</code>, <code>kwar251</code>, <code>kwld251</code> and <code>kwobjcopy251</code> and use the following Makefile:
+</p>
+<pre type="text/x-Makefile-source">CC:=kwcc251
+AS:=kwas251
+AR:=kwar251
+LD:=kwld251</pre>
+
+
+<p>
+    Sometimes developers want to avoid using the <code>TARGET_ARCH</code> Makefile variable or the <code>-march</code> argument.
+    KeilWrapper supports alternative program names which implicitly select the desired toolchain.
+</p>
+
+
+<h2>Locating the original binaries</h2>
+<p>
+    While KeilWrapper is running, it has to invoke the original binaries of the Keil Development Tools.
+    KeilWrapper is quite flexible and supports various ways how to locate these binaries.
+    The ways are attempted in the following order:
+</p>
+<ol>
+    <li>Locate the binaries on the <code>PATH</code>.</li>
+    <li>Locate the binaries via environment variables <code>KEIL_C166_HOME</code>, <code>KEIL_C51_HOME</code> and <code>KEIL_C251_HOME</code>.</li>
+    <li>Query the registry using the <code>reg query</code> command.</li>
+</ol>
+
+<p>
+    On Windows and Cygwin, the registry is queried using the <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms724880.aspx">Registry API</a>.
+    On Wine-based systems, the registry is first queried using the <code>reg query</code> command from Wine.
+    If that fails, registry lookup is failed.
+</p>
+
+</body>
+</html>
