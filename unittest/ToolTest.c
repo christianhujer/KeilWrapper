@@ -70,7 +70,7 @@ static void assertToolNameImpl(const char *file, int line, enum Tool expectedToo
 
 #define assertToolName(expectedTool, toolname) assertToolNameImpl(__FILE__, __LINE__, expectedTool, toolname)
 
-A_Test void testToolDection(void)
+A_Test void ToolTest_testGetFromCommandName(void)
 {
     for (const struct ExpectedDetectionEntry *entry = expectedDetectionMap; entry->toolname; entry++)
         assertToolName(entry->expectedTool, entry->toolname);

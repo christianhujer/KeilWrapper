@@ -14,10 +14,12 @@ TEST_OBJECTS:= \
     ArchTest.o \
     ArrayTest.o \
     ExpectWrapTest.o \
+    PathTest.o \
     ToolTest.o \
 
 PRODUCTION_OBJECTS:= \
     Arch.o \
+    Path.o \
     Tool.o \
 
 vpath %.c ../src

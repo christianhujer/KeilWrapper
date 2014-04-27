@@ -50,7 +50,7 @@ static void assertArchImpl(const char *file, int line, enum Arch expectedArch, c
 
 #define assertArch(expectedArch, toolname) assertArchImpl(__FILE__, __LINE__, expectedArch, toolname)
 
-A_Test void testArchDetection(void)
+A_Test void ArchTest_testGetFromCommandName(void)
 {
     for (const struct ExpectedDetectionEntry *entry = expectedDetectionMap; entry->toolname; entry++)
         assertArch(entry->expectedArch, entry->toolname);
