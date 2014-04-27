@@ -43,7 +43,8 @@
     </li>
     <li>
         The Keil Preprocessor has a bug.
-        Include statements in the form <code>#include MACRO</code> do not work.
+        Include statements in the form <code>#include MACRO</code> do not work if <code>MACRO</code> was given on the command line.
+        The actual bug is that there is no way to specify strings using <code>DEFINE(MACRO=...)</code> on the command line.
     </li>
     <li>
         The Keil tools are very verbose, which is not a direct problem but a significant nuisance.
@@ -74,7 +75,7 @@
 </p>
 <ul>
     <li>
-        The output file formats are not "C-style" (<strong>not solved by KeilWrapper</strong>).
+        The output file formats are not "C-style".
         The object file format is a proprietary format when it should be something like <em>a.out</em>, <em>COFF</em> or <em>ELF</em>.
         This breaks compatibility with tools like GNU binutils.
     </li>
