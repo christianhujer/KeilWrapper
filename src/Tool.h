@@ -1,5 +1,5 @@
-#ifndef TOOLDETECTION_H
-#define TOOLDETECTION_H
+#ifndef TOOL_H
+#define TOOL_H
 
 enum Tool {
     TOOL_UNKNOWN = 0,

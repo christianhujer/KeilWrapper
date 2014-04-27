@@ -8,11 +8,12 @@ ACEUNIT_OBJECTS:= \
     AceUnitMain.o \
     AceUnit.o \
     FullPlainLogger.o \
+    Suite1.o \
 
 TEST_OBJECTS:= \
     ArchTest.o \
+    ArrayTest.o \
     ExpectWrapTest.o \
-    Suite1.o \
     ToolTest.o \
 
 PRODUCTION_OBJECTS:= \
@@ -35,13 +36,9 @@ test: AceUnitMain
 
 AceUnitMain: $(ACEUNIT_OBJECTS) $(TEST_OBJECTS) $(PRODUCTION_OBJECTS)
 
-ExpectWrapTest.o: ExpectWrapTest.h
-ArchTest.o: ArchTest.h
-ToolTest.o: ToolTest.h
+$(TEST_OBJECTS) Suite1.c: runAceUnit
 
-ExpectWrapTest.h ArchTest.h ToolTest.h Suite1.c: runAceUnit
-
-runAceUnit: ExpectWrapTest.c ToolTest.c ArchTest.c
+runAceUnit: $(TEST_OBJECTS:.o=.c)
 	java -ea -jar $(ACEUNIT_HOME)../java/AceUnit.jar --exit true .
 	touch $@
 

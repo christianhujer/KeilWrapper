@@ -1,5 +1,5 @@
-#ifndef ARCHDETECTION_H
-#define ARCHDETECTION_H
+#ifndef ARCH_H
+#define ARCH_H
 
 enum Arch {
     ARCH_UNKNOWN = 0,

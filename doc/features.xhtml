@@ -7,6 +7,9 @@
 .notImplemented {
     background-color: #faa;
 }
+.unitTested {
+    background-color: #ffa;
+}
 ]]></style>
 </head>
 <body>
@@ -20,11 +23,11 @@
     </tr>
     <tr>
         <td>Detecting the tool from the name</td>
-        <td class="notImplemented">Not Implemented</td>
+        <td class="unitTested">unit-tested</td>
     </tr>
     <tr>
         <td>Detecting the toolchain from the name</td>
-        <td class="notImplemented">Not Implemented</td>
+        <td class="unitTested">unit-tested</td>
     </tr>
     <tr>
         <td>Selecting the toolchain with <code>-march</code></td>
@@ -100,6 +103,18 @@
     </tr>
     <tr>
         <td>Supply defaults for output parameters so that the files get placed in the current working directory, not in the source directory.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Get the path to the Keil binaries using PATH.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Locate the binaries via environment variables <code>KEIL_C166_HOME</code>, <code>KEIL_C51_HOME</code> and <code>KEIL_C251_HOME</code>.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Get the path to the Keil binaries using Windows registry.</td>
         <td class="notImplemented">Not Implemented</td>
     </tr>
 </table>

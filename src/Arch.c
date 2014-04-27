@@ -1,4 +1,5 @@
 #include "Arch.h"
+#include "Array.h"
 #include <stddef.h>
 #include <string.h>
 
@@ -30,8 +31,5 @@ enum Arch Arch_getFromCommandName(const char *commandName)
 
 const char *Arch_toString(enum Arch arch)
 {
-    if (arch < 0 || arch >= sizeof(toString) / sizeof(toString[0]))
-        return "Invalid";
-    else
-        return toString[arch];
+    return Array_isIndexValid(toString, arch) ? toString[arch] : "Invalid";
 }

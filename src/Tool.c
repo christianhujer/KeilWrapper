@@ -1,4 +1,5 @@
 #include "Tool.h"
+#include "Array.h"
 #include <stddef.h>
 #include <string.h>
 
@@ -43,8 +44,5 @@ enum Tool Tool_getFromCommandName(const char *commandName)
 
 const char *Tool_toString(enum Tool tool)
 {
-    if (tool < 0 || tool >= sizeof(toString) / sizeof(toString[0]))
-        return "Invalid";
-    else
-        return toString[tool];
+    return Array_isIndexValid(toString, tool) ? toString[tool] : "Invalid";
 }

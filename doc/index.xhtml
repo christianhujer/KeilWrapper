@@ -342,7 +342,9 @@ LD:=kwld251</pre>
 <ol>
     <li>Locate the binaries on the <code>PATH</code>.</li>
     <li>Locate the binaries via environment variables <code>KEIL_C166_HOME</code>, <code>KEIL_C51_HOME</code> and <code>KEIL_C251_HOME</code>.</li>
-    <li>Query the registry using the <code>reg query</code> command.</li>
+    <li>Query the registry using Windows API (Windows and Cygwin only)</li>
+    <li>Query the registry using the <code>reg query</code> command (UNIX / Linux / Wine)</li>
+    <li>Try <code>~/.wine/Keil_v5_c51</code> resp. <code>~/.wine/Keil_v5_c166</code> resp. <code>~/.wine/Keil_v5_c251</code> resp. <code>~/.wine/Keil_v5</code> (UNIX / Linux / Wine)</li>
 </ol>
 
 <p>
