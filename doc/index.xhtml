@@ -22,7 +22,7 @@
 </p>
 <ul>
     <li>
-        The command-line syntax is not "C-style".
+        The command-line syntax of the Keil Development Tools is not "C-style".
         It is not compatible with the expectations of make tools.
         And it creates additional burden in multi-platform projects.
     </li>
@@ -44,7 +44,7 @@
     <li>
         The Keil Preprocessor has a bug.
         Include statements in the form <code>#include MACRO</code> do not work if <code>MACRO</code> was given on the command line.
-        The actual bug is that there is no way to specify strings using <code>DEFINE(MACRO=...)</code> on the command line.
+        The actual bug is that there is no way to specify strings using <code>'DEFINE(MACRO="TEXT")'</code> on the command line because the compiler messes around with the '"'.
     </li>
     <li>
         The Keil tools are very verbose, which is not a direct problem but a significant nuisance.
@@ -67,10 +67,22 @@
         The C-style behavior is to place the output files in the current working directory if no path was specified.
         The C-style behavior is required in order to separate output files for different compiler runs when doing multi-platform or multi-configuration projects.
     </li>
+    <li>
+        The Keil Compiler cannot compile multiple files at once.
+        The C-style behavior is that the Compiler can compile multiple files in one invocation.
+    </li>
+    <li>
+        The Keil Compiler cannot operate as a drop-in replacement for the linker.
+        The C-style behavior is that the Compiler can be used as a drop-in replacement for the linker.
+    </li>
+    <li>
+        The Keil Compiler cannot operate as a drop-in replacement for the assembler.
+        The C-style behavior is that the Compiler can be used as a drop-in replacement for the assembler.
+    </li>
 </ul>
 
 <p>
-    There also are further problems for build managers, developers and integrators which KeilWrapper does not yet address.
+    There also are further problems for build managers, developers and integrators which KeilWrapper does not address.
     The problems not yet addressed by KeilWrapper are:
 </p>
 <ul>
@@ -332,6 +344,97 @@ LD:=kwld251</pre>
     KeilWrapper supports alternative program names which implicitly select the desired toolchain.
 </p>
 
+
+<h3>File Suffix Detection</h3>
+
+<p>
+    Like gcc, KeilWrapper can run as a multi-file driver.
+</p>
+
+<p>
+    This is a typical example of how GCC acts as a multi-file driver.
+    Imagine GCC is called like this:
+</p>
+<pre>gcc foo.c bar.i baz.s qux.o bazola.a ztesch.c thud.a bletch.a -o main</pre>
+<p>
+    What this does is this:
+</p>
+<ul>
+    <li>Compile foo.c (preprocess, compile, assemble)</li>
+    <li>Compile bar.i (compile, assemble)</li>
+    <li>Assemble baz.s</li>
+    <li>Compile ztesch.c (preprocess, compile, assemble)</li>
+    <li>Link foo.o, bar.o, baz.o, qux.o, bazola.a, ztesch.o, thud.o and bletch.a into main</li>
+</ul>
+
+<p>
+    KeilWrapper can, like GCC, act as a multi-file driver.
+    When called like this:
+</p>
+<pre>kwcc -march=C251 foo.c bar.i baz.s qux.o bazola.a ztesch.c thud.lib bletch.a -o main</pre>
+<p>
+    It would run
+</p>
+<ul>
+    <li>C251 to compile foo.c</li>
+    <li>C251 to compile bar.i</li>
+    <li>A251 to assemble baz.s</li>
+    <li>C251 to compile ztesch.c</li>
+    <li>Extract bazola.lib from bazola.a and bletch.lib from bletch.a</li>
+    <li>L251 to link foo.o, bar.o, baz.o, qux.o, bazola.lib, ztesch.o, thud.lib and bletch.lib into main</li>
+</ul>
+
+<p>
+    The following table illustrates the file suffixes supported for recognizing file types and the appropriate actions.
+</p>
+<table border="1">
+    <tr>
+        <th>File Type</th>
+        <th>Suffixes</th>
+        <th>Action</th>
+    </tr>
+    <tr>
+        <td>C source</td>
+        <td><code>.c</code></td>
+        <td rowspan="2">Compile (C251 / C51 / C166)</td>
+    </tr>
+    <tr>
+        <td>Preprocessed C source</td>
+        <td><code>.i</code> <code>.I</code></td>
+    </tr>
+    <tr>
+        <td>Assembler source</td>
+        <td><code>.s</code> <code>.SRC</code></td>
+        <td>Assemble (A251 / A51 / A166)</td>
+    </tr>
+    <tr>
+        <td>Object File</td>
+        <td><code>.o</code> <code>.OBJ</code></td>
+        <td>Link (L251 / L51 / L166)</td>
+    </tr>
+    <tr>
+        <td>Archive File</td>
+        <td><code>.a</code></td>
+        <td>Extract library file, then link.</td>
+    </tr>
+    <tr>
+        <td>Library File</td>
+        <td><code>.LIB</code></td>
+        <td>Link (L251 / L51 / L166)</td>
+    </tr>
+</table>
+<p>
+    Note on the suffixes:
+    The first suffix listed is the default suffix by KeilWrapper.
+    Suffixes which are in uppercase are case-insensitive.
+</p>
+<p>
+    Note on archive and library files:
+    For clarity, KeilWrapper distnguishes between <code>.a</code> archives and <code>.LIB</code> libraries.
+    <code>.a</code> archives are in arch format and contain a <code>.LIB</code> file.
+    <code>.LIB</code> libraries are in a Keil proprietary format and contain the objects with symbol table.
+    That distinction is made to establish compatibility with certain features of <code>ar</code>.
+</p>
 
 <h2>Locating the original binaries</h2>
 <p>
