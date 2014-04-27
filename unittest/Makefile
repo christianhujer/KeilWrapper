@@ -3,6 +3,24 @@ vpath %.c $(ACEUNIT_HOME) $(ACEUNIT_HOME)/loggers/
 
 CPPFLAGS+=-I $(ACEUNIT_HOME) -MMD -DACEUNIT_SUITES -std=c99
 
+ACEUNIT_OBJECTS:= \
+    AceUnitData.o \
+    AceUnitMain.o \
+    AceUnit.o \
+    FullPlainLogger.o \
+
+TEST_OBJECTS:= \
+    ArchTest.o \
+    ExpectWrapTest.o \
+    Suite1.o \
+    ToolTest.o \
+
+PRODUCTION_OBJECTS:= \
+    Arch.o \
+    Tool.o \
+
+vpath %.c ../src
+
 .PHONY: all
 ## Builds and runs the unit tests.
 # Same as test.
@@ -15,20 +33,22 @@ test: AceUnitMain
 	./AceUnitMain
 	touch test
 
-AceUnitMain: AceUnitMain.o AceUnit.o AceUnitData.o FullPlainLogger.o Suite1.o ExpectWrapTest.o
+AceUnitMain: $(ACEUNIT_OBJECTS) $(TEST_OBJECTS) $(PRODUCTION_OBJECTS)
 
 ExpectWrapTest.o: ExpectWrapTest.h
+ArchTest.o: ArchTest.h
+ToolTest.o: ToolTest.h
 
-ExpectWrapTest.h Suite1.c: runAceUnit
+ExpectWrapTest.h ArchTest.h ToolTest.h Suite1.c: runAceUnit
 
-runAceUnit: ExpectWrapTest.c
+runAceUnit: ExpectWrapTest.c ToolTest.c ArchTest.c
 	java -ea -jar $(ACEUNIT_HOME)../java/AceUnit.jar --exit true .
 	touch $@
 
 .PHONY: clean
 ## Removes all auto-generated files.
 clean:
-	$(RM) *.o AceUnitMain *.d Suite*.c ExpectWrapTest.h test runAceUnit
+	$(RM) *.o AceUnitMain *.d Suite*.c *Test.h test runAceUnit
 
 .PHONY: distclean
 ## Removes all auto-generated and downloaded files.

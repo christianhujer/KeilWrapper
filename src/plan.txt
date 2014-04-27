@@ -1,0 +1,52 @@
+Compilers:
+* Replace multiple -I N with a single INCLUDE(N1,N2,...)
+* Replace multiple -D N with a single DEFINE(N1,N2,...)
+* Correct the output filename, which Keil converts to uppercase which breaks Makefiles on case-sensitive systems.
+
+Librarian:
+* Create a librarian wrapper that uses arch format.
+
+Linker:
+* Create a linker wrapper that understands arch format.
+
+Options to be understood:
+-march=CPU[,+EXTENSION...]
+    generate code for CPU and EXTENSION, CPU is one of:
+    80251, 251 (implicitely selects the C251 binaries)
+    8051, 51 (implicitely selects the C51 binaries)
+    C166, XC16, XC16x, C16x, ST10 (implicitely selects the C166 binaries)
+
+
+Ways to call the wrapper:
+* Command Line Option Translator
+    Input (arguments): cc-style command line arguments.
+    Output (stdout): Keil-style command line arguments.
+* Direct wrapper
+    I.e. kwc251 runs as C251.
+* Automatic wrapper
+    I.e. kwcc runs as C251 if -march=80251, runs as C51 if -march=8051, runs as C166 if -march=C166.
+* GCC driver
+
+Wrapper Command Names - kw origin name family
+kwc251: Runs as C251
+kwa251: Runs as A251
+kwl251: Runs as L251
+kwlib251: Runs as LIB251
+kwoh251: Runs as OH251
+
+Wrapper Command Names - cc-style
+Use option -march to select the CPU and therefore the toolchain.
+kwcc: Runs as C251 / C51 / C166.
+kwas: Runs as A251 / A51 / A166
+kwar: Runs as LIB251 / LIB51 / LIB166
+kwld: Runs as L251 / L51 / L166
+kwobjcopy: Runs as OH251 / OH51 / OH166
+
+
+Locating the binaries
+Run reg query on the following keys:
+ARM: HKEY_LOCAL_MACHINE\Software\Keil\Products\MDK
+C166: HKEY_LOCAL_MACHINE\Software\Keil\Products\C166
+C251: HKEY_LOCAL_MACHINE\Software\Keil\Products\C251
+C51: HKEY_LOCAL_MACHINE\Software\Keil\Products\C51
+
