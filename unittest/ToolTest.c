@@ -64,7 +64,7 @@ static void assertToolNameImpl(const char *file, int line, enum Tool expectedToo
     enum Tool actualTool = Tool_getFromCommandName(toolname);
     if (actualTool != expectedTool) {
         fprintf(stderr, "%s:%d: error: Expected \"%s\" to be detected as %s but was %s\n", file, line, toolname, Tool_toString(expectedTool), Tool_toString(actualTool));
-        fail();
+        fail("");
     }
 }
 

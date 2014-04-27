@@ -2,6 +2,7 @@ ACEUNIT_HOME:= ../../aceunit/src/native/
 vpath %.c $(ACEUNIT_HOME) $(ACEUNIT_HOME)/loggers/
 
 CPPFLAGS+=-I $(ACEUNIT_HOME) -MMD -DACEUNIT_SUITES -std=c99
+CFLAGS:=-W -Wall -pedantic -Werror -fdiagnostics-show-option
 
 ACEUNIT_OBJECTS:= \
     AceUnitData.o \
