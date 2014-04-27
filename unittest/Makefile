@@ -13,6 +13,7 @@ ACEUNIT_OBJECTS:= \
 
 TEST_OBJECTS:= \
     ArchTest.o \
+    ArgConvTest.o \
     ArrayTest.o \
     ExpectWrapTest.o \
     PathTest.o \
@@ -20,6 +21,7 @@ TEST_OBJECTS:= \
 
 PRODUCTION_OBJECTS:= \
     Arch.o \
+    ArgConv.o \
     Path.o \
     Tool.o \
 
