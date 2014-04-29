@@ -79,6 +79,10 @@
         The Keil Compiler cannot operate as a drop-in replacement for the assembler.
         The C-style behavior is that the Compiler can be used as a drop-in replacement for the assembler.
     </li>
+    <li>
+        The Keil Compiler only supports C89/C90.
+        The preprocessor of the Keil Compiler does not support variadic macros.
+    </li>
 </ul>
 
 <p>
@@ -96,6 +100,11 @@
         See <a href="http://www.keil.com/support/man/docs/c251/c251_extensions.htm">C251 Language Extensions</a>.
         Words like <code>code</code>, <code>data</code>, <code>bit</code>, <code>reentrant</code>, <code>small</code>, <code>large</code>, <code>interrupt</code> are reserved words.
         If you have used them as symbol names in your source code, you will have to change them, even if you use KeilWrapper instead of the original Keil C251 tools.
+    </li>
+    <li>
+        The Keil Compiler only supports C89/C90.
+        Compiler features for C99 and C11 cannot be made available by Keil Wrapper.
+        Only preprocessor features can be made available.
     </li>
 </ul>
 
