@@ -35,7 +35,7 @@
     </tr>
     <tr>
         <td>
-            Preprocessing with GCC instead of Keil.<br />
+            Preprocessing with GCC instead of Keil in order to allow C99 preprocessor features.<br />
             The pre-defined macros would still be the ones specified in i.e. <a href="http://www.keil.com/support/man/docs/c251/c251_pp_predefmacroconst.htm">C251 Predefined Macros</a>.<br />
             Challenge:<br />The memory model must be known to the preprocessor because the preprocessor provides <code>__MODEL__</code> which can be 0 (SMALL), 2 (LARGE), 3 (TINY), 4 (XTINY) or 5 (XSMALL).<br />
             The memory model can be changed in the file using a <code>#pragma</code>, i.e. <code>#pragma SMALL</code>.
