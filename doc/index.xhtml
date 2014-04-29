@@ -445,6 +445,7 @@ LD:=kwld251</pre>
     That distinction is made to establish compatibility with certain features of <code>ar</code>.
 </p>
 
+
 <h2>Locating the original binaries</h2>
 <p>
     While KeilWrapper is running, it has to invoke the original binaries of the Keil Development Tools.
@@ -464,6 +465,17 @@ LD:=kwld251</pre>
     On Wine-based systems, the registry is first queried using the <code>reg query</code> command from Wine.
     If that fails, registry lookup is failed.
 </p>
+
+
+<h2>KeilWrapper Bugs</h2>
+
+<p>
+    KeilWrapper shamelessly leaks memory.
+    There are lots of calls to malloc() without calls to free().
+    This is not seen as a problem as KeilWrapper quits immediately after its job is done.
+    It is expected that the OS frees the memory of dead processes.
+</p>
+
 
 </body>
 </html>
