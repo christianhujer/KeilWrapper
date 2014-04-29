@@ -30,7 +30,7 @@
         <td class="unitTested">unit-tested</td>
     </tr>
     <tr>
-        <td>Selecting the toolchain with <code>-march</code></td>
+        <td>Selecting the toolchain with <code>-march</code> 8051 -> Cx51, 80251 -> C251, C166 -> C166</td>
         <td class="notImplemented">Not Implemented</td>
     </tr>
     <tr>
@@ -187,6 +187,30 @@
     </tr>
     <tr>
         <td>Insert <code>#define __MODSRC__ 1</code> at <code>#pragma MODSRC</code></td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>If gcc is used for preprocessing, and -fpreprocessed was given, skip preprocessing.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>If gcc is used for preprocessing, and file suffix is .i, skip preprocessing as if -fpreprocessed was used.</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Understand -m8051 as alias for -march=8051 to choose Cx51</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Understand -m80251 as alias for -march=80251 to choose C251</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>Understand -mC166 as alias for -march=C166 to choose C166</td>
+        <td class="notImplemented">Not Implemented</td>
+    </tr>
+    <tr>
+        <td>If gcc is used for preprocessing, tell it to skip the standard system directories for header files by passing -nostdinc</td>
         <td class="notImplemented">Not Implemented</td>
     </tr>
 </table>
