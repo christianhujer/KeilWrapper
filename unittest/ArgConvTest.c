@@ -45,7 +45,8 @@ A_Test void compileSimple(void)
 {
     const char *input[] = { "cc251", "foo.c", NULL };
     const char *expected1[] = { "C251", "foo.c", "NOPRINT", "OBJECT(foo.o)", NULL };
-    const char **expected[] = { expected1, NULL };
+    const char *expected2[] = { "L251", "foo.o", NULL };
+    const char **expected[] = { expected1, expected2, NULL };
     assertConversion(input, expected);
 }
 
@@ -59,51 +60,72 @@ A_Test void compileAndAssemble(void)
 
 A_Test void compileButDoNotAssemble(void)
 {
-    const char *input[] = { "-S", "foo.c", NULL };
-    const char *expected1[] = { "foo.c", "SRC(foo.s)", NULL };
+    const char *input[] = { "cc251", "-S", "foo.c", NULL };
+    const char *expected1[] = { "C251", "foo.c", "SRC(foo.s)", NULL };
     const char **expected[] = { expected1, NULL };
     assertConversion(input, expected);
 }
 
 A_Test void compileButDoNotAssembleToFile(void)
 {
-    const char *input[] = { "-S", "foo.c", "-o", "foo.X", NULL };
-    const char *expected1[] = { "foo.c", "SRC(foo.X)", NULL };
+    const char *input[] = { "cc251", "-S", "foo.c", "-o", "foo.X", NULL };
+    const char *expected1[] = { "C251", "foo.c", "SRC(foo.X)", NULL };
     const char **expected[] = { expected1, NULL };
     assertConversion(input, expected);
 }
 
 A_Test void preprocessOnly(void)
 {
-    const char *input[] = { "-E", "foo.c", NULL };
+    const char *input[] = { "cc251", "-E", "foo.c", NULL };
     // TODO:2014-04-27:cher:3:Preprocessing should happen to stdout.
-    const char *expected1[] = { "foo.c", "PREPRINTONLY(foo.i)", NULL };
+    const char *expected1[] = { "C251", "foo.c", "PREPRINTONLY(foo.i)", NULL };
     const char **expected[] = { expected1, NULL };
     assertConversion(input, expected);
 }
 
 A_Test void preprocessOnlyToFile(void)
 {
-    const char *input[] = { "-E", "foo.c", "-o", "foo2.i", NULL };
-    const char *expected1[] = { "foo.c", "PREPRINTONLY(foo2.i)", NULL };
+    const char *input[] = { "cc251", "-E", "foo.c", "-o", "foo2.i", NULL };
+    const char *expected1[] = { "C251", "foo.c", "PREPRINTONLY(foo2.i)", NULL };
     const char **expected[] = { expected1, NULL };
     assertConversion(input, expected);
 }
 
 A_Test void emptyTest(void)
 {
-    const char *input[] = { "-I", "inc1", "-D", "macro1", "-I", "inc2", "-D", "macro2=foo", "-c", "-o", "foo.o", "foo.c", NULL };
-    const char *expected1[] = { "foo.c", "NOPRINT", "INCDIR(inc1,inc2)", "DEFINE(macro1,macro2=foo)", "OBJECT(foo.o)", NULL };
+    const char *input[] = { "cc251", "-I", "inc1", "-D", "macro1", "-I", "inc2", "-D", "macro2=foo", "-c", "-o", "foo.o", "foo.c", NULL };
+    const char *expected1[] = { "C251", "foo.c", "NOPRINT", "INCDIR(inc1,inc2)", "DEFINE(macro1,macro2=foo)", "OBJECT(foo.o)", NULL };
     const char **expected[] = { expected1, NULL };
     assertConversion(input, expected);
 }
 
-A_Test void multipleFiles(void)
+A_Test void compileMultipleFiles(void)
 {
-    const char *input[] = { "cc251", "-c", "bar.c", "foo.c", NULL };
-    const char *expected1[] = { "C251", "foo.c", "OBJECT(foo.o)", "NULL" };
-    const char *expected2[] = { "C251", "bar.c", "OBJECT(bar.o)", "NULL" };
+    const char *input[] = { "cc251", "-c", "foo.c", "bar.c", NULL };
+    const char *expected1[] = { "C251", "foo.c", "OBJECT(foo.o)", NULL };
+    const char *expected2[] = { "C251", "bar.c", "OBJECT(bar.o)", NULL };
     const char **expected[] = { expected1, expected2, NULL };
+    assertConversion(input, expected);
+}
+
+A_Test void compileAndLinkMultipleFilesWithPathsAndMacros(void)
+{
+    const char *input[] = { "cc251", "-I", "inc1", "-Iinc2", "-D", "FOO", "-DBAR=10", "foo.c", "bar.c", NULL };
+    const char *expected1[] = { "C251", "foo.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(foo.o)", NULL };
+    const char *expected2[] = { "C251", "bar.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(bar.o)", NULL };
+    const char *expected3[] = { "L251", "foo.o", "bar.o", NULL };
+    const char **expected[] = { expected1, expected2, expected3, NULL };
+    assertConversion(input, expected);
+}
+
+A_Test void compileOrAssembleAndLinkMultipleFilesWithPathsAndMacros(void)
+{
+    const char *input[] = { "cc251", "-I", "inc1", "-Iinc2", "-D", "FOO", "-DBAR=10", "foo.c", "bar.s", "qux.i", NULL };
+    const char *expected1[] = { "C251", "foo.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(foo.o)", NULL };
+    const char *expected2[] = { "A251", "bar.s", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(bar.o)", NULL };
+    const char *expected3[] = { "C251", "qux.i", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(foo.o)", NULL };
+    const char *expected4[] = { "L251", "foo.o", "bar.o", "qux.o", NULL };
+    const char **expected[] = { expected1, expected2, expected3, expected4, NULL };
     assertConversion(input, expected);
 }
 

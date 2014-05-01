@@ -84,6 +84,15 @@
         The Keil Compiler only supports C89/C90.
         The preprocessor of the Keil Compiler does not support variadic macros.
     </li>
+    <li>
+        The output files always contain timestamps.
+        This is a bad idea, because it means that you cannot simply check whether you did a refactoring or a change.
+        At least the text-based output files should not contain timestamps.
+    </li>
+    <li>
+        The Keil Compiler / Preprocessor cannot include files from the command line.
+        Something like the command line options <code>-imacros</code> or <code>-include</code> of gcc does not work with Keil compilers.
+    </li>
 </ul>
 
 <p>
