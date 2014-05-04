@@ -120,12 +120,58 @@ A_Test void compileAndLinkMultipleFilesWithPathsAndMacros(void)
 
 A_Test void compileOrAssembleAndLinkMultipleFilesWithPathsAndMacros(void)
 {
-    const char *input[] = { "cc251", "-I", "inc1", "-Iinc2", "-D", "FOO", "-DBAR=10", "foo.c", "bar.s", "qux.i", NULL };
+    // TODO:2014-05-03:cher:3:Define a behavior in case extracting a file from an archive would overwrite an existing file.
+    const char *input[] = { "cc251", "-I", "inc1", "-Iinc2", "-D", "FOO", "-DBAR=10", "foo.c", "bar.s", "baz.o", "qux.i", "quux.lib", "corge.a", "grault.c", "NULL" };
     const char *expected1[] = { "C251", "foo.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(foo.o)", NULL };
     const char *expected2[] = { "A251", "bar.s", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(bar.o)", NULL };
-    const char *expected3[] = { "C251", "qux.i", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(foo.o)", NULL };
-    const char *expected4[] = { "L251", "foo.o", "bar.o", "qux.o", NULL };
-    const char **expected[] = { expected1, expected2, expected3, expected4, NULL };
+    const char *expected3[] = { "C251", "qux.i", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(qux.o)", NULL };
+    const char *expected4[] = { "C251", "grault.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(grault.o)", NULL };
+    const char *expected5[] = { "ar", "x", "corge.a", "corge.lib", NULL };
+    const char *expected6[] = { "L251", "foo.o", "bar.o", "baz.o", "qux.o", "quux.lib", "corge.lib", "grault.o", NULL };
+    const char *expected7[] = { "rm", "corge.lib", NULL };
+    const char **expected[] = { expected1, expected2, expected3, expected4, expected5, expected6, expected7, NULL };
+    assertConversion(input, expected);
+}
+
+A_Test void usingMarch8051SelectsC51Toolchain(void)
+{
+    const char *input[] = { "cc", "-I", "inc1", "-Iinc2", "-D", "FOO", "-DBAR=10", "-march=8051", "foo.c", "bar.s", "baz.o", "qux.i", "quux.lib", "corge.a", "grault.c", "NULL" };
+    const char *expected1[] = { "C51", "foo.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(foo.o)", NULL };
+    const char *expected2[] = { "A51", "bar.s", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(bar.o)", NULL };
+    const char *expected3[] = { "C51", "qux.i", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(qux.o)", NULL };
+    const char *expected4[] = { "C51", "grault.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(grault.o)", NULL };
+    const char *expected5[] = { "ar", "x", "corge.a", "corge.lib", NULL };
+    const char *expected6[] = { "L51", "foo.o", "bar.o", "baz.o", "qux.o", "quux.lib", "corge.lib", "grault.o", NULL };
+    const char *expected7[] = { "rm", "corge.lib", NULL };
+    const char **expected[] = { expected1, expected2, expected3, expected4, expected5, expected6, expected7, NULL };
+    assertConversion(input, expected);
+}
+
+A_Test void usingMarch80251SelectsC251Toolchain(void)
+{
+    const char *input[] = { "cc", "-I", "inc1", "-Iinc2", "-D", "FOO", "-DBAR=10", "-march=80251", "foo.c", "bar.s", "baz.o", "qux.i", "quux.lib", "corge.a", "grault.c", "NULL" };
+    const char *expected1[] = { "C251", "foo.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(foo.o)", NULL };
+    const char *expected2[] = { "A251", "bar.s", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(bar.o)", NULL };
+    const char *expected3[] = { "C251", "qux.i", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(qux.o)", NULL };
+    const char *expected4[] = { "C251", "grault.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(grault.o)", NULL };
+    const char *expected5[] = { "ar", "x", "corge.a", "corge.lib", NULL };
+    const char *expected6[] = { "L251", "foo.o", "bar.o", "baz.o", "qux.o", "quux.lib", "corge.lib", "grault.o", NULL };
+    const char *expected7[] = { "rm", "corge.lib", NULL };
+    const char **expected[] = { expected1, expected2, expected3, expected4, expected5, expected6, expected7, NULL };
+    assertConversion(input, expected);
+}
+
+A_Test void usingMarchC166SelectsC166Toolchain(void)
+{
+    const char *input[] = { "cc", "-I", "inc1", "-Iinc2", "-D", "FOO", "-DBAR=10", "-march=80251", "foo.c", "bar.s", "baz.o", "qux.i", "quux.lib", "corge.a", "grault.c", "NULL" };
+    const char *expected1[] = { "C166", "foo.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(foo.o)", NULL };
+    const char *expected2[] = { "A166", "bar.s", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(bar.o)", NULL };
+    const char *expected3[] = { "C166", "qux.i", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(qux.o)", NULL };
+    const char *expected4[] = { "C166", "grault.c", "INCDIR(inc1,inc2)", "DEFINE(FOO,BAR=10)", "OBJECT(grault.o)", NULL };
+    const char *expected5[] = { "ar", "x", "corge.a", "corge.lib", NULL };
+    const char *expected6[] = { "L166", "foo.o", "bar.o", "baz.o", "qux.o", "quux.lib", "corge.lib", "grault.o", NULL };
+    const char *expected7[] = { "rm", "corge.lib", NULL };
+    const char **expected[] = { expected1, expected2, expected3, expected4, expected5, expected6, expected7, NULL };
     assertConversion(input, expected);
 }
 
