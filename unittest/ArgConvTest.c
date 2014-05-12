@@ -17,8 +17,7 @@ void assertStringArrayEqualsImpl(const char *file, int line, const char *expecte
     int pos = strarrcmp(expected, actual);
     if (-1 != pos) {
         fprintf(stderr, "%s:%d: error: Arrays differ in position %d, expected \"%s\" but got \"%s\".\n", file, line, pos, expected[pos], actual[pos]);
-        // TODO:2014-04-28:cher:3:Enable fail.
-        //fail("");
+        fail("");
     }
 }
 
@@ -31,10 +30,14 @@ static void assertConversionImpl(const char *file, int line, const char **expect
     int index;
     for (index = 0; (expected[index] != NULL) && (actual[index] != NULL); index++)
         assertStringArrayEqualsImpl(file, line, expected[index], actual[index]);
-    if (expected[index] != NULL)
+    if (expected[index] != NULL) {
         fprintf(stderr, "%s:%d: error: Expected more input at index %d starting with \"%s\".\n", file, line, index, expected[index][0]);
-    if (actual[index] != NULL)
+        fail("");
+    }
+    if (actual[index] != NULL) {
         fprintf(stderr, "%s:%d: error: Actual has additional output at index %d starting with \"%s\".\n", file, line, index, actual[index][0]);
+        fail("");
+    }
 }
 
 
