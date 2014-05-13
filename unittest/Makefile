@@ -4,6 +4,8 @@ vpath %.c $(ACEUNIT_HOME) $(ACEUNIT_HOME)/loggers/
 CPPFLAGS+=-I $(ACEUNIT_HOME) -MMD -DACEUNIT_SUITES -std=c99
 CFLAGS:=-W -Wall -pedantic -Werror -fdiagnostics-show-option -g
 
+LDFLAGS:=-Wl,-Map=AceUnitMain.map
+
 ACEUNIT_OBJECTS:= \
     AceUnitData.o \
     AceUnitMain.o \
