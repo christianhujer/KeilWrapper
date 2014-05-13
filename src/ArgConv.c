@@ -26,14 +26,14 @@ struct StringArray {
 void StringArray_new(struct StringArray *this)
 {
     this->length = 0;
-    this->array = malloc(sizeof(const char *) + 1);
+    this->array = malloc(sizeof(const char *));
 }
 
 void StringArray_add(struct StringArray *this, const char *string)
 {
     this->array[this->length] = string;
     this->length++;
-    this->array = realloc(this->array, this->length + 1);
+    this->array = realloc(this->array, sizeof(const char *) * (this->length + 1));
 }
 
 struct ProgramListAndFlags {
@@ -41,45 +41,29 @@ struct ProgramListAndFlags {
     struct StringArray flags;
 };
 
-void ProgramListAndFlags_new(struct ProgramListAndFlags *this)
-{
-    StringArray_new(&this->files);
-    StringArray_new(&this->flags);
-}
-
-void ProgramListAndFlags_addFile(struct ProgramListAndFlags *this, const char *file)
-{
-    StringArray_add(&this->files, file);
-}
-
-void ProgramListAndFlags_addToProgramCalls(struct ProgramListAndFlags *this, const char ****ptrToProgramCalls)
-{
-    for (const char **files = this->files.array; *files; files++) {
-        *ptrToProgramCalls = realloc(*ptrToProgramCalls, ptrCount((const void **) *ptrToProgramCalls) + 1);
-    }
-}
-
 struct ResultArguments {
-    struct ProgramListAndFlags cc;
-    struct ProgramListAndFlags as;
-    struct ProgramListAndFlags ld;
+    struct StringArray files;
+    struct StringArray ccFlags;
+    struct StringArray asFlags;
+    struct StringArray ldFlags;
 };
 
 void ResultArguments_new(struct ResultArguments *this)
 {
-    ProgramListAndFlags_new(&this->cc);
-    ProgramListAndFlags_new(&this->as);
-    ProgramListAndFlags_new(&this->ld);
+    StringArray_new(&this->files);
+    StringArray_new(&this->ccFlags);
+    StringArray_new(&this->asFlags);
+    StringArray_new(&this->ldFlags);
 }
 
 void ResultArguments_parseInputArguments(struct ResultArguments *this, const char **argv)
 {
     for (const char *arg; (arg = *argv); argv++) {
-        if (endswith(arg, ".c")) {
-            ProgramListAndFlags_addFile(&this->cc, arg);
+        if (endswith(arg, ".c") || endswith(arg, ".i")) {
+            StringArray_add(&this->files, arg);
         }
         if (endswith(arg, ".s")) {
-            ProgramListAndFlags_addFile(&this->cc, arg);
+            StringArray_add(&this->files, arg);
         }
     }
 }
@@ -87,9 +71,9 @@ void ResultArguments_parseInputArguments(struct ResultArguments *this, const cha
 const char ***ResultArguments_toProgramCalls(struct ResultArguments *this)
 {
     const char ***programCalls = malloc(sizeof(const char **));
-    ProgramListAndFlags_addToProgramCalls(&this->cc, &programCalls);
-    ProgramListAndFlags_addToProgramCalls(&this->as, &programCalls);
-    ProgramListAndFlags_addToProgramCalls(&this->ld, &programCalls);
+    for (const char **files = this->files.array; *files; files++) {
+        programCalls = realloc(programCalls, sizeof(const char **) * (ptrCount((const void **) programCalls) + 1));
+    }
     return programCalls;
 }
 
