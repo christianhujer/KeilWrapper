@@ -13,3 +13,9 @@ void StringArray_add(struct StringArray *this, const char *string)
     this->length++;
     this->array = realloc(this->array, sizeof(const char *) * (this->length + 1));
 }
+
+void StringArray_delete(struct StringArray *this)
+{
+    this->length = 0;
+    this->array = realloc(this->array, 0);
+}
