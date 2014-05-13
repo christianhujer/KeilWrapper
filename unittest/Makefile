@@ -24,6 +24,7 @@ TEST_OBJECTS:= \
 PRODUCTION_OBJECTS:= \
     Arch.o \
     ArgConv.o \
+    FileSuffix.o \
     Path.o \
     Tool.o \
 
