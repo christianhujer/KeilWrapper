@@ -26,6 +26,7 @@ PRODUCTION_OBJECTS:= \
     ArgConv.o \
     FileSuffix.o \
     Path.o \
+    StringArray.o \
     Tool.o \
 
 vpath %.c ../src

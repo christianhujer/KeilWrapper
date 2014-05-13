@@ -1,5 +1,6 @@
 #include "ArgConv.h"
 #include "FileSuffix.h"
+#include "StringArray.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -17,24 +18,6 @@ bool endswith(const char *input, const char *suffix)
 {
     const char *hit = strstr(input, suffix);
     return (hit != NULL) && (strlen(hit) == strlen(suffix));
-}
-
-struct StringArray {
-    int length;
-    const char **array;
-};
-
-void StringArray_new(struct StringArray *this)
-{
-    this->length = 0;
-    this->array = malloc(sizeof(const char *));
-}
-
-void StringArray_add(struct StringArray *this, const char *string)
-{
-    this->array[this->length] = string;
-    this->length++;
-    this->array = realloc(this->array, sizeof(const char *) * (this->length + 1));
 }
 
 struct ProgramListAndFlags {
