@@ -18,7 +18,6 @@ bool FileSuffix_isAsmFileSuffix(const char *arg)
         || endswith(arg, ".A51")
         || endswith(arg, ".asm")
         || endswith(arg, ".ASM")
-        || endswith(arg, ".ASM")
         ;
 }
 
@@ -29,6 +28,8 @@ bool FileSuffix_isLinkerFileSuffix(const char *arg)
         || endswith(arg, ".a")
         || endswith(arg, ".obj")
         || endswith(arg, ".OBJ")
+        || endswith(arg, ".lib")
+        || endswith(arg, ".LIB")
         ;
 }
 

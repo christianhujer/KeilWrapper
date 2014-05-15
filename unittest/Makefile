@@ -18,6 +18,7 @@ TEST_OBJECTS:= \
     ArgConvTest.o \
     ArrayTest.o \
     ExpectWrapTest.o \
+    FileSuffixTest.o \
     PathTest.o \
     ToolTest.o \
 
