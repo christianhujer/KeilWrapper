@@ -55,7 +55,7 @@ runAceUnit: $(TEST_OBJECTS:.o=.c)
 .PHONY: clean
 ## Removes all auto-generated files.
 clean:
-	$(RM) *.o AceUnitMain *.d Suite*.c *Test.h test runAceUnit
+	$(RM) *.o AceUnitMain *.d Suite*.c *Test.h test runAceUnit *.map
 
 .PHONY: distclean
 ## Removes all auto-generated and downloaded files.
