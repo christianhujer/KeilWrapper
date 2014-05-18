@@ -1,8 +1,4 @@
-struct StringArray {
-    int length;
-    const char **array;
-};
+#include <stddef.h>
 
-extern void StringArray_new(struct StringArray *this);
-extern void StringArray_add(struct StringArray *this, const char *string);
-extern void StringArray_delete(struct StringArray *this);
+extern const char **StringArray_add(const char **array, const char *string);
+extern size_t StringArray_getLength(const char **array);

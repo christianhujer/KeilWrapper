@@ -2,7 +2,7 @@
 
 extern bool endswith(const char *input, const char *suffix);
 
-bool FileSuffix_isCFileSuffix(const char *arg)
+bool FileSuffix_hasCFileSuffix(const char *arg)
 {
     return false
         || endswith(arg, ".c")
@@ -10,7 +10,7 @@ bool FileSuffix_isCFileSuffix(const char *arg)
         ;
 }
 
-bool FileSuffix_isAsmFileSuffix(const char *arg)
+bool FileSuffix_hasAsmFileSuffix(const char *arg)
 {
     return false
         || endswith(arg, ".s")
@@ -21,7 +21,7 @@ bool FileSuffix_isAsmFileSuffix(const char *arg)
         ;
 }
 
-bool FileSuffix_isLinkerFileSuffix(const char *arg)
+bool FileSuffix_hasLinkerFileSuffix(const char *arg)
 {
     return false
         || endswith(arg, ".o")
@@ -33,11 +33,11 @@ bool FileSuffix_isLinkerFileSuffix(const char *arg)
         ;
 }
 
-bool FileSuffix_isHandledFileSuffix(const char *arg)
+bool FileSuffix_hasHandledFileSuffix(const char *arg)
 {
     return false
-        || FileSuffix_isCFileSuffix(arg)
-        || FileSuffix_isAsmFileSuffix(arg)
-        || FileSuffix_isLinkerFileSuffix(arg)
+        || FileSuffix_hasCFileSuffix(arg)
+        || FileSuffix_hasAsmFileSuffix(arg)
+        || FileSuffix_hasLinkerFileSuffix(arg)
         ;
 }

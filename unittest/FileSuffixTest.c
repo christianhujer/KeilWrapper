@@ -1,53 +1,53 @@
 #include "FileSuffixTest.h"
 #include "../src/FileSuffix.h"
 
-A_Test void FileSuffixTest_isCFileSuffix(void)
+A_Test void FileSuffixTest_hasCFileSuffix(void)
 {
-    assertTrue("", FileSuffix_isCFileSuffix("foo.c"));
-    assertTrue("", FileSuffix_isCFileSuffix("foo.i"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.s"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.a51"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.A51"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.asm"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.ASM"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.o"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.a"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.obj"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.OBJ"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.lib"));
-    assertFalse("", FileSuffix_isCFileSuffix("foo.LIB"));
+    assertTrue("", FileSuffix_hasCFileSuffix("foo.c"));
+    assertTrue("", FileSuffix_hasCFileSuffix("foo.i"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.s"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.a51"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.A51"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.asm"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.ASM"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.o"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.a"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.obj"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.OBJ"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.lib"));
+    assertFalse("", FileSuffix_hasCFileSuffix("foo.LIB"));
 }
 
-A_Test void FileSuffixTest_isAsmFileSuffix(void)
+A_Test void FileSuffixTest_hasAsmFileSuffix(void)
 {
-    assertFalse("", FileSuffix_isAsmFileSuffix("foo.c"));
-    assertFalse("", FileSuffix_isAsmFileSuffix("foo.i"));
-    assertTrue("", FileSuffix_isAsmFileSuffix("foo.s"));
-    assertTrue("", FileSuffix_isAsmFileSuffix("foo.a51"));
-    assertTrue("", FileSuffix_isAsmFileSuffix("foo.A51"));
-    assertTrue("", FileSuffix_isAsmFileSuffix("foo.asm"));
-    assertTrue("", FileSuffix_isAsmFileSuffix("foo.ASM"));
-    assertFalse("", FileSuffix_isAsmFileSuffix("foo.o"));
-    assertFalse("", FileSuffix_isAsmFileSuffix("foo.a"));
-    assertFalse("", FileSuffix_isAsmFileSuffix("foo.obj"));
-    assertFalse("", FileSuffix_isAsmFileSuffix("foo.OBJ"));
-    assertFalse("", FileSuffix_isAsmFileSuffix("foo.lib"));
-    assertFalse("", FileSuffix_isAsmFileSuffix("foo.LIB"));
+    assertFalse("", FileSuffix_hasAsmFileSuffix("foo.c"));
+    assertFalse("", FileSuffix_hasAsmFileSuffix("foo.i"));
+    assertTrue("", FileSuffix_hasAsmFileSuffix("foo.s"));
+    assertTrue("", FileSuffix_hasAsmFileSuffix("foo.a51"));
+    assertTrue("", FileSuffix_hasAsmFileSuffix("foo.A51"));
+    assertTrue("", FileSuffix_hasAsmFileSuffix("foo.asm"));
+    assertTrue("", FileSuffix_hasAsmFileSuffix("foo.ASM"));
+    assertFalse("", FileSuffix_hasAsmFileSuffix("foo.o"));
+    assertFalse("", FileSuffix_hasAsmFileSuffix("foo.a"));
+    assertFalse("", FileSuffix_hasAsmFileSuffix("foo.obj"));
+    assertFalse("", FileSuffix_hasAsmFileSuffix("foo.OBJ"));
+    assertFalse("", FileSuffix_hasAsmFileSuffix("foo.lib"));
+    assertFalse("", FileSuffix_hasAsmFileSuffix("foo.LIB"));
 }
 
-A_Test void FileSuffixTest_isLinkerFileSuffix(void)
+A_Test void FileSuffixTest_hasLinkerFileSuffix(void)
 {
-    assertFalse("", FileSuffix_isLinkerFileSuffix("foo.c"));
-    assertFalse("", FileSuffix_isLinkerFileSuffix("foo.i"));
-    assertFalse("", FileSuffix_isLinkerFileSuffix("foo.s"));
-    assertFalse("", FileSuffix_isLinkerFileSuffix("foo.a51"));
-    assertFalse("", FileSuffix_isLinkerFileSuffix("foo.A51"));
-    assertFalse("", FileSuffix_isLinkerFileSuffix("foo.asm"));
-    assertFalse("", FileSuffix_isLinkerFileSuffix("foo.ASM"));
-    assertTrue("", FileSuffix_isLinkerFileSuffix("foo.o"));
-    assertTrue("", FileSuffix_isLinkerFileSuffix("foo.a"));
-    assertTrue("", FileSuffix_isLinkerFileSuffix("foo.obj"));
-    assertTrue("", FileSuffix_isLinkerFileSuffix("foo.OBJ"));
-    assertTrue("", FileSuffix_isLinkerFileSuffix("foo.lib"));
-    assertTrue("", FileSuffix_isLinkerFileSuffix("foo.LIB"));
+    assertFalse("", FileSuffix_hasLinkerFileSuffix("foo.c"));
+    assertFalse("", FileSuffix_hasLinkerFileSuffix("foo.i"));
+    assertFalse("", FileSuffix_hasLinkerFileSuffix("foo.s"));
+    assertFalse("", FileSuffix_hasLinkerFileSuffix("foo.a51"));
+    assertFalse("", FileSuffix_hasLinkerFileSuffix("foo.A51"));
+    assertFalse("", FileSuffix_hasLinkerFileSuffix("foo.asm"));
+    assertFalse("", FileSuffix_hasLinkerFileSuffix("foo.ASM"));
+    assertTrue("", FileSuffix_hasLinkerFileSuffix("foo.o"));
+    assertTrue("", FileSuffix_hasLinkerFileSuffix("foo.a"));
+    assertTrue("", FileSuffix_hasLinkerFileSuffix("foo.obj"));
+    assertTrue("", FileSuffix_hasLinkerFileSuffix("foo.OBJ"));
+    assertTrue("", FileSuffix_hasLinkerFileSuffix("foo.lib"));
+    assertTrue("", FileSuffix_hasLinkerFileSuffix("foo.LIB"));
 }

@@ -1,21 +1,19 @@
 #include "StringArray.h"
 #include <stdlib.h>
 
-void StringArray_new(struct StringArray *this)
+const char **StringArray_add(const char **array, const char *string)
 {
-    this->length = 0;
-    this->array = malloc(sizeof(const char *));
+    size_t length = StringArray_getLength(array);
+    array = realloc(array, sizeof(const char *) * (length + 2)); // existing elements + new element + NULL
+    array[length] = string;
+    array[length + 1] = NULL;
+    return array;
 }
 
-void StringArray_add(struct StringArray *this, const char *string)
+size_t StringArray_getLength(const char **array)
 {
-    this->array[this->length] = string;
-    this->length++;
-    this->array = realloc(this->array, sizeof(const char *) * (this->length + 1));
-}
-
-void StringArray_delete(struct StringArray *this)
-{
-    this->length = 0;
-    this->array = realloc(this->array, 0);
+    int length = 0;
+    if (array) while (*array++)
+        length++;
+    return length;
 }
