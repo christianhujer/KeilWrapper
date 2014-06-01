@@ -35,7 +35,7 @@ tags: $(wildcard *.[ch])
 
 .PHONY: indent
 ## Indents the source code.
-indent: tags
+indent:
 	indent -npro -kr -nut -l1000 -c1 $(wildcard *.c)
 
 .PHONY: install

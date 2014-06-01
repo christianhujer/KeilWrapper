@@ -1,5 +1,6 @@
 *.[ado]
 *.a.lock
+*.exe
 *.swp
 */makehelp.pl
 *~
