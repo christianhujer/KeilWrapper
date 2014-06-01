@@ -18,8 +18,9 @@ enum Action {
 size_t ptrCount(const void **ptr)
 {
     size_t result = 0;
-    if (ptr) while (*ptr++)
-        result++;
+    if (ptr)
+        while (*ptr++)
+            result++;
     return result;
 }
 

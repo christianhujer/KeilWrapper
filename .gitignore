@@ -1,1 +1,7 @@
 *.[ado]
+*.a.lock
+*.swp
+*/makehelp.pl
+*~
+src/kwcc
+tags
