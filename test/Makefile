@@ -1,7 +1,7 @@
-ACEUNIT_HOME:= ../../aceunit/src/native/
-vpath %.c $(ACEUNIT_HOME) $(ACEUNIT_HOME)/loggers/
+ACEUNIT_HOME:= ../../aceunit/
+vpath %.c $(ACEUNIT_HOME)src/ $(ACEUNIT_HOME)src/loggers/
 
-CPPFLAGS+=-I $(ACEUNIT_HOME) -MMD -DACEUNIT_SUITES -std=c99
+CPPFLAGS+=-I $(ACEUNIT_HOME)include/ -MMD -DACEUNIT_SUITES -std=c99
 CFLAGS:=-W -Wall -pedantic -Werror -fdiagnostics-show-option -g
 
 LDFLAGS:=-Wl,-Map=AceUnitMain.map
@@ -16,6 +16,7 @@ ACEUNIT_OBJECTS:= \
 TEST_OBJECTS:= \
     ArchTest.o \
     ArgConvTest.o \
+    ArgParserTest.o \
     ArrayTest.o \
     ExpectWrapTest.o \
     FileSuffixTest.o \
@@ -49,7 +50,7 @@ AceUnitMain: $(ACEUNIT_OBJECTS) $(TEST_OBJECTS) $(PRODUCTION_OBJECTS)
 $(TEST_OBJECTS) Suite1.c: runAceUnit
 
 runAceUnit: $(TEST_OBJECTS:.o=.c)
-	java -ea -jar $(ACEUNIT_HOME)../java/AceUnit.jar --exit true .
+	java -ea -jar $(ACEUNIT_HOME)generator/../java/AceUnit.jar --exit true .
 	touch $@
 
 .PHONY: clean
