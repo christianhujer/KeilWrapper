@@ -16,7 +16,6 @@ ACEUNIT_OBJECTS:= \
 TEST_OBJECTS:= \
     ArchTest.o \
     ArgConvTest.o \
-    ArgParserTest.o \
     ArrayTest.o \
     ExpectWrapTest.o \
     FileSuffixTest.o \
@@ -50,7 +49,7 @@ AceUnitMain: $(ACEUNIT_OBJECTS) $(TEST_OBJECTS) $(PRODUCTION_OBJECTS)
 $(TEST_OBJECTS) Suite1.c: runAceUnit
 
 runAceUnit: $(TEST_OBJECTS:.o=.c)
-	java -ea -jar $(ACEUNIT_HOME)generator/../java/AceUnit.jar --exit true .
+	java -ea -jar $(ACEUNIT_HOME)generator/AceUnit.jar --exit true .
 	touch $@
 
 .PHONY: clean

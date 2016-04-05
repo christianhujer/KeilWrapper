@@ -18,7 +18,7 @@ static void assertNameImpl(const char *file, int line, const char *expectedName,
     const char *actualName = Path_getEnvName(arch);
     if (strcmp(actualName, expectedName)) {
         fprintf(stderr, "%s:%d: error: Expected %s to have environment name %s but was %s.\n", file, line, Arch_toString(arch), expectedName, actualName);
-        fail("");
+        fail();
     }
 }
 

@@ -44,7 +44,7 @@ static void assertArchImpl(const char *file, int line, enum Arch expectedArch, c
     enum Arch actualArch = Arch_getFromCommandName(toolname);
     if (actualArch != expectedArch) {
         fprintf(stderr, "%s:%d: error: Expected \"%s\" to be detected as %s but was %s\n", file, line, toolname, Arch_toString(expectedArch), Arch_toString(actualArch));
-        fail("");
+        fail();
     }
 }
 

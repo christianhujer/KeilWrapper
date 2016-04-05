@@ -27,12 +27,12 @@ static int strarrcmp(const char *array1[], const char *array2[])
 
 void assertStringArrayEquals(const char *array1[], const char *array2[])
 {
-    assertEquals("", -1, strarrcmp(array1, array2));
+    assertEquals(-1, strarrcmp(array1, array2));
 }
 
 void assertStringArrayNotEquals(const char *array1[], const char *array2[])
 {
-    assertNotEquals("", -1, strarrcmp(array1, array2));
+    assertNotEquals(-1, strarrcmp(array1, array2));
 }
 
 A_Test void twoEmptyStringArrays_areEqual(void)
